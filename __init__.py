@@ -1,29 +1,43 @@
 """
-package-name is utility to create sub process.
-
-Execute a shell script::
-
-    import pk3proc
-
-    # execute a shell script
-
-    returncode, out, err = pk3proc.shell_script('ls / | grep bin')
-    print returncode
-    print out
-    # output:
-    # > 0
-    # > bin
-    # > sbin
-
-Run a command::
-
-    # Unlike the above snippet, following statement does not start an sh process.
-    returncode, out, err = pk3proc.command('ls', 'a*', cwd='/usr/local')
-
+k3log is a collection of log utilities for logging.
 """
 
-# from .proc import CalledProcessError
-# from .proc import ProcError
+from .log import (
+    add_std_handler,
+    deprecate,
+    get_datefmt,
+    get_fmt,
+    get_root_log_fn,
+    make_file_handler,
+    make_formatter,
+    make_logger,
+    set_logger_level,
+    stack_format,
+    stack_list,
+    stack_str,
+)
 
-__version__ = "0.2.2"
-_name = "pk3proc"
+#  from .archive import(
+#      Archiver,
+
+#      archive,
+#      clean,
+#  )
+
+__version__ = "0.1.2"
+__name__ = "k3log"
+
+__all__ = [
+    "add_std_handler",
+    "deprecate",
+    "get_datefmt",
+    "get_fmt",
+    "get_root_log_fn",
+    "make_file_handler",
+    "make_formatter",
+    "make_logger",
+    "set_logger_level",
+    "stack_format",
+    "stack_list",
+    "stack_str",
+]
