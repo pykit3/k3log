@@ -291,7 +291,8 @@ def add_std_handler(logger, stream=None, fmt=None, datefmt=None, level=None):
             is the log message format.
             It can be an alias name(like `default`) that can be used in
             ``get_fmt()``.
-            By default it is ``default``: ``[%(asctime)s,%(process)d-%(thread)d,%(filename)s,%(lineno)d,%(levelname)s] %(message)s``.
+            By default it is ``default``:
+            ``[%(asctime)s,%(process)d-%(thread)d,%(filename)s,%(lineno)d,%(levelname)s] %(message)s``.
 
         datefmt(str):
             is the format for date.
