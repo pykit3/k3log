@@ -5,7 +5,7 @@ import k3log
 
 
 def read_file(fn):
-    with open(fn, 'r') as f:
+    with open(fn, "r") as f:
         return f.read()
 
 
@@ -19,18 +19,12 @@ def rm_file(fn):
             raise
 
 
-rm_file('/tmp/tt')
+rm_file("/tmp/tt")
 
-l = k3log.make_logger(base_dir=None,
-                      log_name='m',
-                      log_fn='tt',
-                      level='INFO',
-                      fmt='%(message)s',
-                      datefmt='%H%M%S'
-                      )
+lgr = k3log.make_logger(base_dir=None, log_name="m", log_fn="tt", level="INFO", fmt="%(message)s", datefmt="%H%M%S")
 
-l.debug('debug')
-l.info('info')
+lgr.debug("debug")
+lgr.info("info")
 
-cont = read_file('/tmp/tt').strip()
+cont = read_file("/tmp/tt").strip()
 print(cont)

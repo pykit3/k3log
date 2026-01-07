@@ -1,1 +1,1 @@
-log_dir = '/tmp'
+log_dir = "/tmp"

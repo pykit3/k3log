@@ -1,6 +1,6 @@
-"""
-k3log is a collection of log utilities for logging.
-"""
+from importlib.metadata import version
+
+__version__ = version("k3log")
 
 from .log import (
     add_std_handler,
@@ -16,16 +16,6 @@ from .log import (
     stack_list,
     stack_str,
 )
-
-#  from .archive import(
-#      Archiver,
-
-#      archive,
-#      clean,
-#  )
-
-__version__ = "0.1.4"
-__name__ = "k3log"
 
 __all__ = [
     "add_std_handler",

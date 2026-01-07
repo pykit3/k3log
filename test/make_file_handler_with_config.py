@@ -5,7 +5,7 @@ import k3log
 
 
 def read_file(fn):
-    with open(fn, 'r') as f:
+    with open(fn, "r") as f:
         return f.read()
 
 
@@ -19,24 +19,16 @@ def rm_file(fn):
             raise
 
 
-rm_file('/tmp/handler_change')
+rm_file("/tmp/handler_change")
 
-l = k3log.make_logger(base_dir='/tmp',
-                      log_name='h',
-                      log_fn='dd',
-                      level='INFO',
-                      fmt='%(message)s',
-                      datefmt='%H%M%S'
-                      )
-l.handlers = []
-handler = k3log.make_file_handler(log_fn='handler_change',
-                                  fmt='%(message)s',
-                                  datefmt='%H%M%S')
-l.addHandler(handler)
+lgr = k3log.make_logger(base_dir="/tmp", log_name="h", log_fn="dd", level="INFO", fmt="%(message)s", datefmt="%H%M%S")
+lgr.handlers = []
+handler = k3log.make_file_handler(log_fn="handler_change", fmt="%(message)s", datefmt="%H%M%S")
+lgr.addHandler(handler)
 
-l.debug('debug')
-l.info('info')
+lgr.debug("debug")
+lgr.info("info")
 
-cont = read_file('/tmp/handler_change').strip()
+cont = read_file("/tmp/handler_change").strip()
 
 print(cont)

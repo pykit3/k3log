@@ -13,23 +13,22 @@ import k3confloader
 logger = logging.getLogger(__name__)
 
 log_formats = {
-    'default': '[%(asctime)s,%(process)d-%(thread)d,%(filename)s,%(lineno)d,%(levelname)s] %(message)s',
-    'time_level': "[%(asctime)s,%(levelname)s] %(message)s",
-    'message': '%(message)s',
-
+    "default": "[%(asctime)s,%(process)d-%(thread)d,%(filename)s,%(lineno)d,%(levelname)s] %(message)s",
+    "time_level": "[%(asctime)s,%(levelname)s] %(message)s",
+    "message": "%(message)s",
     # more info: but it is too long.
     # 'full': '[%(asctime)s,%(process)d-%(thread)d,%(name)s, %(filename)s,%(lineno)d,%(funcName)s %(levelname)s] %(message)s',
 }
 
 date_formats = {
     # by default do not specify
-    'default': None,
-    'time': '%H:%M:%S',
+    "default": None,
+    "time": "%H:%M:%S",
 }
 
-log_suffix = 'out'
+log_suffix = "out"
 
-default_stack_sep = ' --- '
+default_stack_sep = " --- "
 
 
 class FixedWatchedFileHandler(logging.FileHandler):
@@ -53,7 +52,7 @@ class FixedWatchedFileHandler(logging.FileHandler):
     Schroeder.
     """
 
-    def __init__(self, filename, mode='a', encoding=None, delay=0, tag=None):
+    def __init__(self, filename, mode="a", encoding=None, delay=0, tag=None):
         logging.FileHandler.__init__(self, filename, mode, encoding, delay)
         self.dev, self.ino = -1, -1
         self.tag = tag
@@ -86,7 +85,6 @@ class FixedWatchedFileHandler(logging.FileHandler):
                 raise
         # compare file system stat with that of our stream file handle
         if not sres or sres[ST_DEV] != self.dev or sres[ST_INO] != self.ino:
-
             # Fixed by xp 2017 Apr 03:
             #     os.fstat still gets OSError(errno=2), although it operates
             #     directly on fd instead of path.  The same for stream.flush().
@@ -129,19 +127,17 @@ def get_root_log_fn():
         log file name.
     """
 
-    if hasattr(__main__, '__file__'):
+    if hasattr(__main__, "__file__"):
         name = __main__.__file__
         name = os.path.basename(name)
-        if name == '<stdin>':
-            name = '__stdin__'
-        return name.rsplit('.', 1)[0] + '.' + log_suffix
+        if name == "<stdin>":
+            name = "__stdin__"
+        return name.rsplit(".", 1)[0] + "." + log_suffix
     else:
-        return '__instant_command__.' + log_suffix
+        return "__instant_command__." + log_suffix
 
 
-def make_logger(base_dir=None, log_name=None, log_fn=None,
-                level=logging.DEBUG, fmt=None,
-                datefmt=None):
+def make_logger(base_dir=None, log_name=None, log_fn=None, level=logging.DEBUG, fmt=None, datefmt=None):
     """
     It creates a logger with a rolling file hander and specified formats.
 
@@ -189,15 +185,14 @@ def make_logger(base_dir=None, log_name=None, log_fn=None,
         if log_name is None:
             log_fn = get_root_log_fn()
         else:
-            log_fn = log_name + '.' + log_suffix
+            log_fn = log_name + "." + log_suffix
 
     #  # do not add 2 handlers to one logger by default
     for h in logger.handlers:
-        if getattr(h, "tag", None) == 'root':
+        if getattr(h, "tag", None) == "root":
             logger.handlers.remove(h)
 
-    logger.addHandler(make_file_handler(base_dir, log_fn,
-                                        fmt=fmt, datefmt=datefmt, tag="root"))
+    logger.addHandler(make_file_handler(base_dir, log_fn, fmt=fmt, datefmt=datefmt, tag="root"))
 
     return logger
 
@@ -264,7 +259,7 @@ def set_logger_level(level=logging.INFO, name_prefixes=None):
     """
 
     if name_prefixes is None:
-        name_prefixes = ('',)
+        name_prefixes = ("",)
 
     root_logger = logging.getLogger()
 
@@ -314,10 +309,10 @@ def add_std_handler(logger, stream=None, fmt=None, datefmt=None, level=None):
 
     stream = stream or sys.stdout
 
-    if stream == 'stdout':
+    if stream == "stdout":
         stream = sys.stdout
 
-    elif stream == 'stderr':
+    elif stream == "stderr":
         stream = sys.stderr
 
     stdhandler = logging.StreamHandler(stream)
@@ -379,7 +374,7 @@ def get_fmt(fmt):
     """
 
     if fmt is None:
-        fmt = 'default'
+        fmt = "default"
 
     return log_formats.get(fmt, fmt)
 
@@ -435,7 +430,7 @@ def stack_list(offset=0):
 
     # list of ( filename, line-nr, in-what-function, statement )
     x = traceback.extract_stack()
-    return x[: -offset]
+    return x[:-offset]
 
 
 def stack_format(stacks, fmt=None, sep=None):
@@ -491,15 +486,14 @@ def stack_format(stacks, fmt=None, sep=None):
     dict_stacks = []
     for st in stacks:
         o = {
-            'fn': os.path.basename(st[0]),
-            'ln': st[1],
-            'func': st[2],
-            'statement': st[3],
+            "fn": os.path.basename(st[0]),
+            "ln": st[1],
+            "func": st[2],
+            "statement": st[3],
         }
         dict_stacks.append(o)
 
-    return sep.join([fmt.format(**xx)
-                     for xx in dict_stacks])
+    return sep.join([fmt.format(**xx) for xx in dict_stacks])
 
 
 def stack_str(offset=0, fmt=None, sep=None):
@@ -526,7 +520,7 @@ def stack_str(offset=0, fmt=None, sep=None):
 
 
 def deprecate(msg=None, fmt=None, sep=None):
-    '''
+    """
     Print a `deprecate` message, at warning level.
     The printed message includes:
 
@@ -576,12 +570,11 @@ def deprecate(msg=None, fmt=None, sep=None):
             is the separator string between each frame.
             By default it is ``" --- "``.
             Thus all frames are printed in a single line.
-    '''
+    """
 
-    d = 'Deprecated:'
+    d = "Deprecated:"
 
     if msg is not None:
-        d += ' ' + str(msg)
+        d += " " + str(msg)
 
-    logger.warning(d + (sep or default_stack_sep)
-                   + stack_str(offset=1, fmt=fmt, sep=sep))
+    logger.warning(d + (sep or default_stack_sep) + stack_str(offset=1, fmt=fmt, sep=sep))
