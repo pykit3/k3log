@@ -37,6 +37,7 @@ dev = [
     "pytest>=7.0",
     "ruff",
     "coverage",
+    "k3proc",
 ]
 publish = [
     "build",

@@ -92,7 +92,7 @@ class TestLogutil(unittest.TestCase):
         cont = read_file(this_base + "/t.out")
 
         self.assertRegex(cont, "^Deprecated: foo")
-        self.assertRegex(cont, "test_log.py::\d+ in test_deprecate\n  k3log.deprecate")
+        self.assertRegex(cont, r"test_log.py::\d+ in test_deprecate\n  k3log.deprecate")
 
     def test_stack_list(self):
         stack = k3log.stack_list()
@@ -115,7 +115,7 @@ class TestLogutil(unittest.TestCase):
 
     def test_stack_str(self):
         rst = k3log.stack_str(fmt="{fn}-{ln}-{func}-{statement}", sep=" ")
-        self.assertRegex(rst, " test_log.py-\d+-test_stack_str- *rst = ")
+        self.assertRegex(rst, r" test_log.py-\d+-test_stack_str- *rst = ")
 
     def test_get_datefmt(self):
         cases = (
