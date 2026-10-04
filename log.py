@@ -4,11 +4,11 @@ import logging.handlers
 import os
 import sys
 import traceback
-from stat import ST_DEV
-from stat import ST_INO
+from stat import ST_DEV, ST_INO
+
+import k3confloader
 
 import __main__
-import k3confloader
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
 # k3log
 
-[![Build Status](https://github.com/pykit3/k3log/actions/workflows/python-package.yml/badge.svg)](https://github.com/pykit3/k3log/actions/workflows/python-package.yml)
+[![Action-CI](https://github.com/pykit3/k3log/actions/workflows/python-package.yml/badge.svg)](https://github.com/pykit3/k3log/actions/workflows/python-package.yml)
 [![Documentation Status](https://readthedocs.org/projects/k3log/badge/?version=stable)](https://k3log.readthedocs.io/en/stable/?badge=stable)
 [![Package](https://img.shields.io/pypi/pyversions/k3log)](https://pypi.org/project/k3log)
 
@@ -8,8 +8,6 @@ k3log is a collection of log utilities.
 
 k3log is a component of [pykit3] project: a python3 toolkit set.
 
-
-k3log is a collection of log utilities for logging.
 
 
 
@@ -22,11 +20,11 @@ pip install k3log
 # Synopsis
 
 ```python
+import k3log
 
 # make a file logger in one line
-logger = pk3logutil.make_logger('/tmp', level='INFO', fmt='%(message)s',
-                                datefmt="%H:%M:%S")
-logger.info('foo')
+logger = k3log.make_logger("/tmp", level="INFO", fmt="%(message)s", datefmt="%H:%M:%S")
+logger.info("foo")
 
 logger.stack_str(fmt="{fn}:{ln} in {func}\n  {statement}", sep="\n")
 # runpy.py:174 in _run_module_as_main
@@ -35,9 +33,8 @@ logger.stack_str(fmt="{fn}:{ln} in {func}\n  {statement}", sep="\n")
 #   exec code in run_globals
 # ...
 # test_logutil.py:82 in test_deprecate
-#   pk3logutil.deprecate()
+#   k3log.deprecate()
 #   'foo', fmt='{fn}:{ln} in {func}\n  {statement}', sep='\n')
-
 ```
 
 #   Author

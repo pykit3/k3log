@@ -20,19 +20,19 @@ pip install k3log
 import k3log
 
 # Create a logger with default settings
-logger = k3log.make_logger('/tmp/myapp')
-logger.info('Hello World')
+logger = k3log.make_logger("/tmp/myapp")
+logger.info("Hello World")
 
 # Add stdout handler to root logger
 k3log.add_std_handler(logger)
 
 # Create file handler
-handler = k3log.make_file_handler('/tmp/myapp.log')
+handler = k3log.make_file_handler("/tmp/myapp.log")
 logger.addHandler(handler)
 
 # Get stack trace as formatted string
 stack = k3log.stack_str()
-logger.debug('Stack trace: %s', stack)
+logger.debug("Stack trace: %s", stack)
 ```
 
 ## API Reference

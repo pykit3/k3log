@@ -4,8 +4,9 @@ import os
 import threading
 import unittest
 
-import k3log
 import k3proc
+
+import k3log
 
 logger = logging.getLogger(__name__)
 
@@ -71,17 +72,17 @@ class TestLogutil(unittest.TestCase):
     def test_get_root_log_fn(self):
         # instant
 
-        code, out, err = subproc('python -c "import k3log; print(k3log.get_root_log_fn())"')
+        code, out, _err = subproc('python -c "import k3log; print(k3log.get_root_log_fn())"')
         self.assertEqual(0, code)
         self.assertEqual("__instant_command__.out", out.strip())
 
-        code, out, err = subproc('echo "import k3log; print(k3log.get_root_log_fn())" | python')
+        code, out, _err = subproc('echo "import k3log; print(k3log.get_root_log_fn())" | python')
         self.assertEqual(0, code)
         self.assertEqual("__stdin__.out", out.strip())
 
         # load by file
 
-        code, out, err = subproc("python foo.py", cwd=os.path.dirname(__file__))
+        code, out, _err = subproc("python foo.py", cwd=os.path.dirname(__file__))
         self.assertEqual(0, code)
         self.assertEqual("foo.out", out.strip())
 
@@ -158,7 +159,7 @@ class TestLogutil(unittest.TestCase):
         self.assertEqual(cont, "info")
 
     def test_make_logger_with_config(self):
-        code, out, err = subproc("python make_logger_with_config.py", cwd=os.path.dirname(__file__))
+        code, out, _err = subproc("python make_logger_with_config.py", cwd=os.path.dirname(__file__))
         self.assertEqual(0, code)
         self.assertEqual(out.strip(), "info")
 
@@ -186,14 +187,14 @@ class TestLogutil(unittest.TestCase):
         self.assertEqual(cont, "info")
 
     def test_make_file_handler_with_config(self):
-        code, out, err = subproc("python make_file_handler_with_config.py", cwd=os.path.dirname(__file__))
+        code, out, _err = subproc("python make_file_handler_with_config.py", cwd=os.path.dirname(__file__))
         self.assertEqual(0, code)
         self.assertEqual(out.strip(), "info")
 
     def test_add_std_handler(self):
         rm_file(this_base + "/stdlog")
 
-        code, out, err = subproc("python stdlog.py", cwd=os.path.dirname(__file__))
+        code, out, _err = subproc("python stdlog.py", cwd=os.path.dirname(__file__))
         self.assertEqual(0, code)
         self.assertEqual("error", out.strip())
 
