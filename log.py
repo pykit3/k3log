@@ -124,7 +124,7 @@ def get_root_log_fn():
         ``echo "from pykit import k3log; print k3log.get_root_log_fn()" | python``.
 
     Returns:
-        log file name.
+        (str): log file name.
     """
 
     if hasattr(__main__, "__file__"):
@@ -170,7 +170,7 @@ def make_logger(base_dir=None, log_name=None, log_fn=None, level=logging.DEBUG, 
             used the `default` date format.
 
     Returns:
-        a ``logging.Logger`` instance.
+        (logging.Logger): the configured logger.
 
     """
 
@@ -227,7 +227,7 @@ def make_file_handler(base_dir=None, log_fn=None, fmt=None, datefmt=None, tag=No
             used the ``default`` date format.
 
     Returns:
-        an instance of `logging.handlers.WatchedFileHandler`.
+        (logging.FileHandler): a handler that reopens the log file after log rotation moves it.
 
     """
     if base_dir is None:
@@ -304,7 +304,7 @@ def add_std_handler(logger, stream=None, fmt=None, datefmt=None, level=None):
             By default it is the logger's level.
 
     Returns:
-        the `logger` in argument.
+        (logging.Logger): the `logger` in argument.
     """
 
     stream = stream or sys.stdout
@@ -342,7 +342,7 @@ def make_formatter(fmt=None, datefmt=None):
             used the `default` date format.
 
     Returns:
-        an `logging.Formatter` instance.
+        (logging.Formatter): the formatter.
     """
 
     fmt = get_fmt(fmt)
@@ -370,7 +370,7 @@ def get_fmt(fmt):
             `fmt`.
 
     Returns:
-        translated `fmt` or the original value of argument `fmt`.
+        (str): translated `fmt` or the original value of argument `fmt`.
     """
 
     if fmt is None:
@@ -397,7 +397,7 @@ def get_datefmt(datefmt):
             `datefmt`.
 
     Returns:
-        translated `datefmt` or the original value of argument `datefmt`.
+        (str | None): translated `datefmt` or the original value of argument `datefmt`.
     """
 
     if datefmt is None:
@@ -416,14 +416,8 @@ def stack_list(offset=0):
             remove the lowest `offset` frames.
 
     Returns:
-        list of::
-
-            {
-                'fn': ...
-                'ln': ...
-                'func': ...
-                'statement': ...
-            }
+        (list): `traceback.FrameSummary` frames, the outermost first. A frame indexes as
+            `(filename, line number, function name, statement)`.
     """
 
     offset += 1  # count this function as 1
@@ -474,7 +468,7 @@ def stack_format(stacks, fmt=None, sep=None):
             Thus all frames are in the same line.
 
     Returns:
-        a string repesenting a calling stack.
+        (str): a string representing a calling stack.
     """
 
     if fmt is None:
@@ -513,7 +507,7 @@ def stack_str(offset=0, fmt=None, sep=None):
         sep: is same as `k3log.stack_format`.
 
     Returns:
-        a string repesenting a calling stack.
+        (str): a string representing a calling stack.
     """
     offset += 1  # count this function as 1
     return stack_format(stack_list(offset), fmt=fmt, sep=sep)
