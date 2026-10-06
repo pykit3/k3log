@@ -1,6 +1,9 @@
 import errno
+import io
 import logging
 import os
+import shutil
+import tempfile
 import threading
 import unittest
 
@@ -60,6 +63,34 @@ class TestFileHandler(unittest.TestCase):
 
         sess["running"] = False
         th.join()
+
+    def test_rotate(self):
+        # The handler reopens its path when the file was renamed or removed,
+        # or when another file took its place.
+        d = tempfile.mkdtemp()
+        fn = os.path.join(d, "r.out")
+        lgr = k3log.make_logger(base_dir=d, log_name="rotate", log_fn="r.out", fmt="message")
+
+        lgr.info("1")
+        os.rename(fn, fn + ".1")
+        lgr.info("2")
+
+        os.remove(fn)
+        lgr.info("3")
+
+        os.rename(fn, fn + ".2")
+        with open(fn, "w") as f:
+            f.write("created\n")
+        lgr.info("4")
+
+        self.assertEqual("1\n", read_file(fn + ".1"))
+        self.assertEqual("3\n", read_file(fn + ".2"))
+        self.assertEqual("created\n4\n", read_file(fn))
+
+        for h in list(lgr.handlers):
+            lgr.removeHandler(h)
+            h.close()
+        shutil.rmtree(d)
 
 
 class TestLogutil(unittest.TestCase):
@@ -170,6 +201,31 @@ class TestLogutil(unittest.TestCase):
 
         kept = [h for h in lgr.handlers if h in old_handlers]
         self.assertEqual([], kept)
+
+    def test_make_logger_again(self):
+        # Calling make_logger() again replaces the file handler it added, and
+        # keeps a handler added by other code.
+        d = tempfile.mkdtemp()
+        stream = io.StringIO()
+
+        lgr = k3log.make_logger(base_dir=d, log_name="reconfig", log_fn="a.out", fmt="message")
+        k3log.add_std_handler(lgr, stream, fmt="message")
+        lgr.debug("1")
+
+        lgr = k3log.make_logger(
+            base_dir=d, log_name="reconfig", log_fn="b.out", level="INFO", fmt="%(levelname)s %(message)s"
+        )
+        lgr.debug("2")
+        lgr.info("3")
+
+        self.assertEqual("1\n", read_file(os.path.join(d, "a.out")))
+        self.assertEqual("INFO 3\n", read_file(os.path.join(d, "b.out")))
+        self.assertEqual("1\n3\n", stream.getvalue())
+
+        for h in list(lgr.handlers):
+            lgr.removeHandler(h)
+            h.close()
+        shutil.rmtree(d)
 
     def test_make_logger_with_config(self):
         code, out, _err = subproc("python make_logger_with_config.py", cwd=os.path.dirname(__file__))
