@@ -188,7 +188,7 @@ def make_logger(base_dir=None, log_name=None, log_fn=None, level=logging.DEBUG, 
             log_fn = log_name + "." + log_suffix
 
     #  # do not add 2 handlers to one logger by default
-    for h in logger.handlers:
+    for h in list(logger.handlers):
         if getattr(h, "tag", None) == "root":
             logger.handlers.remove(h)
 

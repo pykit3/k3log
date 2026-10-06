@@ -158,6 +158,19 @@ class TestLogutil(unittest.TestCase):
 
         self.assertEqual(cont, "info")
 
+    def test_make_logger_removes_all_root_handlers(self):
+        # Removing from `logger.handlers` while iterating it skips the handler after each removed one.
+        lgr = logging.getLogger("root_handlers")
+        old_handlers = [logging.NullHandler(), logging.NullHandler()]
+        for h in old_handlers:
+            h.tag = "root"
+            lgr.addHandler(h)
+
+        k3log.make_logger(base_dir=this_base, log_name="root_handlers", log_fn="tt")
+
+        kept = [h for h in lgr.handlers if h in old_handlers]
+        self.assertEqual([], kept)
+
     def test_make_logger_with_config(self):
         code, out, _err = subproc("python make_logger_with_config.py", cwd=os.path.dirname(__file__))
         self.assertEqual(0, code)
