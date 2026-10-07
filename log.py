@@ -142,29 +142,28 @@ def make_logger(base_dir=None, log_name=None, log_fn=None, level=logging.DEBUG, 
     It creates a logger with a rolling file hander and specified formats.
 
     Args:
-
-        base_dir:
+        base_dir(str | None):
             specifies the dir of log file.
             If it is ``None``, use ``config.log_dir`` as default.
 
-        log_name:
+        log_name(str | None):
             is the name of the logger to create.
             ``None`` means the root logger.
 
-        log_fn:
+        log_fn(str | None):
             specifies the log file name.
             If it is ``None``, use ``k3log.get_root_log_fn`` to make a log file name.
 
-        level:
+        level(int | str):
             specifies log level.
             It could be int value such as ``logging.DEBUG`` or string such as ``DEBUG``.
 
-        fmt:
+        fmt(str | None):
             specifies log format.
             It can be an alias that can be used in ``k3log.get_fmt()``, or ``None`` to
             used the ``default`` log format.
 
-        datefmt:
+        datefmt(str | None):
             specifies log date format.
             It can be an alias that can be used in ``k3log.get_datefmt()``, or ``None`` to
             used the `default` date format.
@@ -207,21 +206,20 @@ def make_file_handler(base_dir=None, log_fn=None, fmt=None, datefmt=None, tag=No
     log file.
 
     Args:
-
-        base_dir:
+        base_dir(str | None):
             specifies the dir of log file.
             If it is ``None``, use ``k3conf.log_dir`` as default.
 
-        log_fn:
+        log_fn(str | None):
             specifies the log file name.
             If it is ``None``, use ``k3log.get_root_log_fn`` to make a log file name.
 
-        fmt:
+        fmt(str | None):
             specifies log format.
             It can be an alias that can be used in ``k3log.get_fmt()``, or ``None`` to
             used the ``default`` log format.
 
-        datefmt:
+        datefmt(str | None):
             specifies log date format.
             It can be an alias that can be used in ``k3log.get_datefmt()``, or ``None`` to
             used the ``default`` date format.
@@ -247,12 +245,11 @@ def set_logger_level(level=logging.INFO, name_prefixes=None):
     Set all logger level that matches ``name_prefixes``.
 
     Args:
-
-        level:
+        level(int | str):
             specifies log level.
             It could be int value such as ``logging.DEBUG`` or string such as ``DEBUG``.
 
-        name_prefixes:
+        name_prefixes(str | tuple[str, ...] | None):
             specifies log prefixes which is operated.
             It can be None, str or a tuple of str.
             If `name_prefixes` is None, set the log level for all logger.
@@ -276,11 +273,10 @@ def add_std_handler(logger, stream=None, fmt=None, datefmt=None, level=None):
     It adds a `stdout` or `stderr` steam handler to the `logger`.
 
     Args:
-
-        logger:
+        logger(logging.Logger):
             is an instance of `logging.Logger` to add handler to.
 
-        stream:
+        stream(typing.TextIO | str | None):
             specifies the stream, it could be:
             -   ``sys.stdout`` or a string ``stdout``.
             -   ``sys.stderr`` or a string ``stderr``.
@@ -298,7 +294,7 @@ def add_std_handler(logger, stream=None, fmt=None, datefmt=None, level=None):
             `get_datefmt()`.
             By default it is `None`.
 
-        level:
+        level(int | str | None):
             is the log level.
             It can be int value such as ``logging.DEBUG`` or string such as ``DEBUG``.
             By default it is the logger's level.
@@ -330,13 +326,12 @@ def make_formatter(fmt=None, datefmt=None):
     It creates an `logging.Formatter` instance, with specified `fmt` and `datefmt`.
 
     Args:
-
-        fmt:
+        fmt(str | None):
             specifies log format.
             It can be an alias that can be used in `get_fmt()`, or `None` to
             used the `default` log format.
 
-        datefmt:
+        datefmt(str | None):
             specifies log date format.
             It can be an alias that can be used in `get_datefmt()`, or `None` to
             used the `default` date format.
@@ -363,8 +358,7 @@ def get_fmt(fmt):
         }
 
     Args:
-
-        fmt:
+        fmt(str | None):
             is the alias name.
             If no predefined alias name is found, it returns the passed in value of
             `fmt`.
@@ -390,8 +384,7 @@ def get_datefmt(datefmt):
         }
 
     Args:
-
-        datefmt:
+        datefmt(str | None):
             is the alias name.
             If no predefined alias name is found, it returns the passed in value of
             `datefmt`.
@@ -411,8 +404,7 @@ def stack_list(offset=0):
     It returns the calling stack from where it is called.
 
     Args:
-
-        offset:
+        offset(int):
             remove the lowest `offset` frames.
 
     Returns:
@@ -444,25 +436,16 @@ def stack_format(stacks, fmt=None, sep=None):
           'foo', fmt='{fn}:{ln} in {func}\\n  {statement}', sep='\\n')
 
     Args:
+        stacks(list[traceback.FrameSummary]):
+            is stack from ``k3log.stack_list``.
+            Each frame is read as ``(filename, line number, function name, statement)``.
 
-        stacks:
-            is stack from ``k3log.stack_list``::
-
-                [
-                    {
-                        'fn': ...
-                        'ln': ...
-                        'func': ...
-                        'statement': ...
-                    }
-                    ...
-                ]
-
-        fmt:
+        fmt(str | None):
             specifies the template to format a stack frame.
+            It can use ``{fn}`` (the base name of the file), ``{ln}``, ``{func}`` and ``{statement}``.
             By default it is: ``{fn}:{ln} in {func} {statement}``.
 
-        sep:
+        sep(str | None):
             specifies the separator string between each stack frame.
             By default it is ``" --- "``.
             Thus all frames are in the same line.
@@ -496,15 +479,14 @@ def stack_str(offset=0, fmt=None, sep=None):
     called.
 
     Args:
-
-        offset:
+        offset(int):
             remove the lowest `offset` frames.
             Because usually one does not need the frame of the `k3log.stack_str`
             line.
 
-        fmt: is same as `k3log.stack_format`.
+        fmt(str | None): is same as `k3log.stack_format`.
 
-        sep: is same as `k3log.stack_format`.
+        sep(str | None): is same as `k3log.stack_format`.
 
     Returns:
         (str): a string representing a calling stack.
@@ -551,16 +533,15 @@ def deprecate(msg=None, fmt=None, sep=None):
           'foo', fmt='{fn}:{ln} in {func}\\n  {statement}', sep='\\n')
 
     Args:
-
-        msg:
+        msg(str | None):
             is description of the `deprecated` statement.
             It could be `None`.
 
-        fmt:
+        fmt(str | None):
             is call stack frame format.
             By default it is `{fn}:{ln} in {func} {statement}`.
 
-        sep:
+        sep(str | None):
             is the separator string between each frame.
             By default it is ``" --- "``.
             Thus all frames are printed in a single line.
