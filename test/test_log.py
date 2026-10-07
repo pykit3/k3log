@@ -227,6 +227,22 @@ class TestLogutil(unittest.TestCase):
             h.close()
         shutil.rmtree(d)
 
+    def test_make_logger_closes_replaced_handler(self):
+        d = tempfile.mkdtemp()
+
+        lgr = k3log.make_logger(base_dir=d, log_name="replaced", log_fn="a.out")
+        [old_handler] = lgr.handlers
+        old_stream = old_handler.stream
+
+        lgr = k3log.make_logger(base_dir=d, log_name="replaced", log_fn="b.out")
+
+        self.assertTrue(old_stream.closed)
+
+        for h in list(lgr.handlers):
+            lgr.removeHandler(h)
+            h.close()
+        shutil.rmtree(d)
+
     def test_make_logger_with_config(self):
         code, out, _err = subproc("python make_logger_with_config.py", cwd=os.path.dirname(__file__))
         self.assertEqual(0, code)
