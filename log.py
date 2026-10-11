@@ -190,7 +190,7 @@ def make_logger(base_dir=None, log_name=None, log_fn=None, level=logging.DEBUG, 
     #  # do not add 2 handlers to one logger by default
     for h in list(logger.handlers):
         if getattr(h, "tag", None) == "root":
-            logger.handlers.remove(h)
+            logger.removeHandler(h)
             h.close()
 
     logger.addHandler(make_file_handler(base_dir, log_fn, fmt=fmt, datefmt=datefmt, tag="root"))
