@@ -339,3 +339,14 @@ class TestLogutil(unittest.TestCase):
             content = read_file(this_base + "/ss")
 
             self.assertEqual(expected, content.strip())
+
+    def test_set_logger_level_root(self):
+        root = logging.getLogger()
+        self.addCleanup(root.setLevel, root.level)
+
+        root.setLevel(logging.WARNING)
+        k3log.set_logger_level(logging.DEBUG)
+        self.assertEqual(logging.DEBUG, root.level)
+
+        k3log.set_logger_level(logging.ERROR, name_prefixes="1_prefix")
+        self.assertEqual(logging.DEBUG, root.level)

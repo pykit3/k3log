@@ -263,6 +263,8 @@ def set_logger_level(level=logging.INFO, name_prefixes=None):
     root_logger = logging.getLogger()
 
     loggers = sorted(root_logger.manager.loggerDict.items())
+    # loggerDict does not hold the root logger, and getLogger("root") returns it.
+    loggers.append((root_logger.name, root_logger))
 
     for name, _ in loggers:
         if name.startswith(name_prefixes):
