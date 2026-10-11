@@ -53,15 +53,17 @@ class FixedWatchedFileHandler(logging.FileHandler):
     """
 
     def __init__(self, filename, mode="a", encoding=None, delay=0, tag=None):
-        logging.FileHandler.__init__(self, filename, mode, encoding, delay)
         self.dev, self.ino = -1, -1
+        logging.FileHandler.__init__(self, filename, mode, encoding, delay)
         self.tag = tag
-        self._statstream()
 
-    def _statstream(self):
-        if self.stream:
-            sres = os.fstat(self.stream.fileno())
-            self.dev, self.ino = sres[ST_DEV], sres[ST_INO]
+    def _open(self):
+        # FileHandler.emit() also calls _open() to open a delayed stream, so the
+        # identity of every stream is recorded when it is opened.
+        stream = logging.FileHandler._open(self)
+        sres = os.fstat(stream.fileno())
+        self.dev, self.ino = sres[ST_DEV], sres[ST_INO]
+        return stream
 
     def emit(self, record):
         """
@@ -102,7 +104,6 @@ class FixedWatchedFileHandler(logging.FileHandler):
                         # open a new file handle and get new stat info from
                         # that fd
                         self.stream = self._open()
-                        self._statstream()
                         break
                 except OSError as e:
                     if e.errno == errno.ENOENT:

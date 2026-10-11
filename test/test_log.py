@@ -92,6 +92,22 @@ class TestFileHandler(unittest.TestCase):
             h.close()
         shutil.rmtree(d)
 
+    def test_delayed_stream(self):
+        # The first record opens a delayed stream. The next record must not
+        # reopen it, because reopening a file in write mode truncates it.
+        d = tempfile.mkdtemp()
+        for mode in ("w", "a"):
+            fn = os.path.join(d, mode + ".out")
+            h = k3log.log.FixedWatchedFileHandler(fn, mode=mode, delay=True)
+            h.setFormatter(logging.Formatter("%(message)s"))
+            h.handle(logging.makeLogRecord({"msg": "1"}))
+            h.handle(logging.makeLogRecord({"msg": "2"}))
+            h.close()
+
+            self.assertEqual("1\n2\n", read_file(fn), mode)
+
+        shutil.rmtree(d)
+
 
 class TestLogutil(unittest.TestCase):
     def setUp(self):
