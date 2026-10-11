@@ -108,6 +108,37 @@ class TestFileHandler(unittest.TestCase):
 
         shutil.rmtree(d)
 
+    def test_reopen_transient_failure(self):
+        # Reopening a rotated file may fail with ENOENT for a moment. The
+        # record must still go to the new file, and the next one must not
+        # reopen it again.
+        d = tempfile.mkdtemp()
+        fn = os.path.join(d, "r.out")
+        h = k3log.log.FixedWatchedFileHandler(fn)
+        h.setFormatter(logging.Formatter("%(message)s"))
+        h.handle(logging.makeLogRecord({"msg": "1"}))
+        os.rename(fn, fn + ".1")
+
+        real_open = h._open
+        opens = []
+
+        def _open():
+            if not opens:
+                opens.append("ENOENT")
+                raise OSError(errno.ENOENT, "transient")
+            opens.append("ok")
+            return real_open()
+
+        h._open = _open
+        h.handle(logging.makeLogRecord({"msg": "2"}))
+        h.handle(logging.makeLogRecord({"msg": "3"}))
+        h.close()
+
+        self.assertEqual(["ENOENT", "ok"], opens)
+        self.assertEqual("1\n", read_file(fn + ".1"))
+        self.assertEqual("2\n3\n", read_file(fn))
+        shutil.rmtree(d)
+
 
 class TestLogutil(unittest.TestCase):
     def setUp(self):
